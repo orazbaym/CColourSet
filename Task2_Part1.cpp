@@ -53,11 +53,36 @@ class CPoint3D {
                 return x * v.x + y * v.y + z * v.z;
         }
 
+        // Task 1. Method which return the distance D from P to an inf line of A and B
         double distance_D(const CPoint3D& A, const CPoint3D& B) const {
-                // return distance = (|(Px - Ax)*(-By +Ay) + (Cy - Ay)*(Bx - Ax)|) / (sqrt(pow((-By + Ay), 2) + pow((Bx - Ax),2)))
+
+                CPoint3D AB = B - A;
+                CPoint3D AP = *this - A;
+                CPoint3D crossProduct = AP.Cross(AB);
+
+                double crossProductMagnitude = crossProduct.Length();
+                double ABLength = AB.Length();
+
+                return crossProductMagnitude / ABLength;
+        }
+        // Task 2. Method which return the square of the distance from the nearest point from line segment from A to B
+        double SquaredDistanceFromNearest(const CPoint3D& A, const CPoint3D& B) const {
+                CPoint3D AB = B - A;
+                CPoint3D AP = *this - A;
+
+                double pFactor = AP.Dot(AB) / AB.SquaredLength();
+
+                CPoint3D nearestPoint;
+                if (pFactor < 0) {
+                        nearestPoint = A;
+                }
+                else if (pFactor > 1) {
+                        nearestPoint = B;
+                }
+                else {
+                        nearestPoint = A + AB * pFactor;
+                }
+
+                return (*this - nearestPoint).SquaredLength();
         }
 };
-
-int main() {
-    return 0;
-}
